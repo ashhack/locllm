@@ -1,21 +1,19 @@
-# LLM Pipeline Project
+# Local LLM Service
 
-This project implements a pipeline for interacting with a local LLM model using FastAPI, Redis for caching, and PostgreSQL for storing chat history. The pipeline consists of two main agents: an Explainer agent and a Reasoning agent.
+This project provides a simple way to host large language models (LLMs) locally on your machine and expose them as an API service. It's designed for developers who want to build personal AI-powered applications without relying on cloud services. The service uses FastAPI for the API layer, Redis for response caching, and PostgreSQL for storing usage history.
 
 ## Project Structure
 
 ```
-llm-pipeline
+locllm
 ├── src
 │   ├── model_service
 │   │   ├── __init__.py
-│   │   ├── api.py
-│   │   ├── config.py
-│   │   └── ollama_client.py
-│   ├── agents
-│   │   ├── __init__.py
-│   │   ├── explainer.py
-│   │   └── reasoning.py
+│   │   ├── main.py       # FastAPI application
+│   │   └── models/
+│   │       ├── base.py   # Base model interface
+│   │       ├── qwen.py   # Qwen model implementation
+│   │       └── model_factory.py
 │   ├── database
 │   │   ├── __init__.py
 │   │   ├── models.py
@@ -38,43 +36,86 @@ llm-pipeline
 
 ## Setup Instructions
 
-1. **Clone the repository**:
+1. **Prerequisites**:
+   - Python 3.8 or higher
+   - CUDA-capable GPU (recommended) or decent CPU
+   - 8GB+ RAM (16GB+ recommended)
+   - Sufficient storage for models
+
+2. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd llm-pipeline
+   cd locllm
    ```
 
-2. **Install dependencies**:
-   Make sure you have Python 3.8 or higher installed. Then, install the required packages using pip:
+3. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Configure the environment**:
-   Update the `config/settings.py` file with your PostgreSQL and Redis configurations.
-
-4. **Run the application**:
-   Start the FastAPI server by running:
+4. **Download models**:
+   The project comes with scripts to download supported open-source models:
    ```bash
-   uvicorn main:app --reload
+   # Example: Download Qwen model
+   python -m scripts.download_model qwen
    ```
 
-5. **Access the API**:
-   Open your browser and navigate to `http://localhost:8000/docs` to view the API documentation and test the endpoints.
+5. **Configure the service**:
+   - Update `config/settings.py` with your:
+     - Model preferences (CPU/GPU, memory limits)
+     - Redis cache settings
+     - PostgreSQL connection details
+
+6. **Run the service**:
+   ```bash
+   uvicorn src.model_service.main:app --reload
+   ```
+
+7. **Verify installation**:
+   - API documentation: `http://localhost:8000/docs`
+   - Health check: `http://localhost:8000/health`
+   - List models: `http://localhost:8000/models`
 
 ## Usage
 
-- Use the `/api` endpoint to interact with the LLM model.
-- The Explainer agent can be used to get explanations for user queries.
-- The Reasoning agent can provide logical conclusions based on the input.
+### API Endpoints
+
+- `POST /generate`: Generate text completions from your local LLM
+- `GET /models`: List available models
+- `GET /health`: Check service health status
+
+### Integration Examples
+
+```python
+import requests
+
+# Connect to your local LLM service
+url = "http://localhost:8000/generate"
+payload = {
+    "prompt": "Explain quantum computing in simple terms",
+    "max_tokens": 100
+}
+response = requests.post(url, json=payload)
+print(response.json())
+```
+
+## Features
+
+- **Local Hosting**: Run powerful language models entirely on your machine
+- **Low Latency**: Direct access to models without internet roundtrip
+- **Privacy**: Your data stays on your machine
+- **Caching**: Redis caching layer for improved response times
+- **Monitoring**: Track usage and performance with PostgreSQL
+- **Multiple Models**: Support for various open-source LLMs
+- **Resource Management**: Configure GPU/CPU usage and model loading
 
 ## Database
 
-The project uses PostgreSQL to store chat history. Ensure that your PostgreSQL server is running and accessible.
+The project uses PostgreSQL to store usage metrics, performance data, and request history for monitoring and optimization.
 
 ## Caching
 
-Redis is used for caching checkpoints to improve performance. Make sure your Redis server is running.
+Redis is used for caching frequent responses and managing model states to reduce load times and improve response speed.
 
 ## Contributing
 

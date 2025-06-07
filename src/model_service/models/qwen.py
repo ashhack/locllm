@@ -16,8 +16,8 @@ class QwenService(BaseLLMService):
         self.load_model()
 
     def load_model(self):
-        self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(self.model_path)  # type: ignore
-        self.model = AutoModelForCausalLM.from_pretrained(  # type: ignore
+        self.tokenizer: PreTrainedTokenizer = AutoTokenizer.from_pretrained(self.model_path)
+        self.model = AutoModelForCausalLM.from_pretrained(
             self.model_path,
             torch_dtype="auto",
             device_map="cuda"
