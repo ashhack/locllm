@@ -1,16 +1,18 @@
 import os
-import json
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from transformers.tokenization_utils import PreTrainedTokenizer
 from transformers.modeling_utils import PreTrainedModel
 from fastapi import HTTPException
 from typing import Dict, Any
-from base import BaseLLMService, ChatRequest
+from .base import BaseLLMService, ChatRequest
 
 class QwenService(BaseLLMService):
     def __init__(self):
-        self.model_path = os.path.join("..", "..", "models", "Qwen3-0.6B")
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        self.model_path = os.path.abspath(os.path.join(current_dir, "../../../artifacts/Qwen3-0.6B"))
+        print(current_dir, self.model_path)
         self.load_model()
 
     def load_model(self):
@@ -18,7 +20,7 @@ class QwenService(BaseLLMService):
         self.model = AutoModelForCausalLM.from_pretrained(  # type: ignore
             self.model_path,
             torch_dtype="auto",
-            device_map="auto"
+            device_map="cuda"
         )
 
     async def generate_response(self, chat_request: ChatRequest) -> Dict[str, Any]:

@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from base import ChatRequest
-from model_factory import ModelFactory
+from models.base import ChatRequest
+from models.model_factory import ModelFactory
 
 app = FastAPI()
 

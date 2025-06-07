@@ -1,6 +1,6 @@
 from typing import Dict, Type
-from base import BaseLLMService
-from qwen import QwenService
+from .base import BaseLLMService
+from .qwen import QwenService
 
 class ModelFactory:
     _models: Dict[str, Type[BaseLLMService]] = {

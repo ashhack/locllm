@@ -1,5 +1,5 @@
 # Model files and directories
-models/
+artifacts/
 *.h5
 *.pkl
 *.pth
