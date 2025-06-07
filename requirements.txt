@@ -1,0 +1,7 @@
+FastAPI
+redis
+psycopg2-binary
+langraph
+uvicorn
+pydantic
+python-dotenv
