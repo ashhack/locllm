@@ -1,6 +1,6 @@
 # Local LLM Service
 
-[![Pylint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/YOUR_USERNAME/YOUR_GIST_ID/raw/pylint-badge.json)](https://github.com/YOUR_USERNAME/locllm/actions/workflows/superlinter.yaml)
+[![Pylint](https://github.com/ashutosh1919/locllm/actions/workflows/superlinter.yaml/badge.svg)](https://github.com/YOUR_USERNAME/locllm/actions/workflows/superlinter.yaml)
 
 This project provides a simple way to host large language models (LLMs) locally on your machine and expose them as an API service. It's designed for developers who want to build personal AI-powered applications without relying on cloud services. The service uses FastAPI for the API layer, Redis for response caching, and PostgreSQL for storing usage history.
 
